@@ -1,7 +1,7 @@
 package com.zuinigerijder.kotlinshowinfo
 
+import android.app.Activity
 import android.os.Build
-import android.view.WindowManager
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import java.util.Locale
@@ -11,11 +11,12 @@ class DisplayInfoUtil {
     companion object {
         @Suppress("DEPRECATION")
         @Composable
-        fun getDisplayInfo(windowManager: WindowManager?) : String {
+        fun getDisplayInfo() : String {
             var text = "\nDisplayInfo"
             val locale = Locale.getDefault()
 
             val context = LocalContext.current
+            val windowManager = (context as Activity).windowManager
             val displayMetrics = context.resources.displayMetrics
             val widthPixels = if (windowManager != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 windowManager.currentWindowMetrics.bounds.width()

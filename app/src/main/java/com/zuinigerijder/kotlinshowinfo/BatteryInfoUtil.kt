@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
 import android.os.Build
+import androidx.activity.ComponentActivity.BATTERY_SERVICE
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import kotlin.time.Duration.Companion.milliseconds
@@ -11,9 +12,10 @@ import kotlin.time.Duration.Companion.milliseconds
 class BatteryInfoUtil {
     companion object {
         @Composable
-        fun getBatteryInfo(batteryManager: BatteryManager?) : String {
+        fun getBatteryInfo() : String {
             var result = "\nBatteryInfo\n"
             val context = LocalContext.current
+            val batteryManager = context.getSystemService(BATTERY_SERVICE) as BatteryManager
             val info =
                 IntentFilter(Intent.ACTION_BATTERY_CHANGED).let {
                         intentFilter -> context.registerReceiver(null, intentFilter)
@@ -63,26 +65,24 @@ class BatteryInfoUtil {
                 val temperature = info.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -99) / 10.0
                 result += "\nTemperature: $temperature °C"
 
-                if (batteryManager != null) {
-                    val currentCapacity =
-                        batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
-                    result += "\nCurrent Capacity percentage: $currentCapacity%"
-                    var currentChargeCounter =
-                        batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER)
-                    if (currentCapacity > 0) {
-                        val totalCapacity = (currentChargeCounter / currentCapacity * 100).toLong() / 1000
-                        result += "\nTotal Capacity: $totalCapacity mAh"
-                    }
-                    currentChargeCounter /= 1000
-                    result += "\nCurrent Charge counter: $currentChargeCounter mAh"
-                    val currentNow =
-                        batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW) / 1000
-                    result += "\nCurrent Now: $currentNow mA"
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        val chargeTimeRemaining = batteryManager.computeChargeTimeRemaining()
-                        val chargeTimeRemainingDuration = chargeTimeRemaining.milliseconds
-                        result += "\nCharge Time remaining: $chargeTimeRemainingDuration"
-                    }
+                val currentCapacity =
+                    batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
+                result += "\nCurrent Capacity percentage: $currentCapacity%"
+                var currentChargeCounter =
+                    batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER)
+                if (currentCapacity > 0) {
+                    val totalCapacity = (currentChargeCounter / currentCapacity * 100).toLong() / 1000
+                    result += "\nTotal Capacity: $totalCapacity mAh"
+                }
+                currentChargeCounter /= 1000
+                result += "\nCurrent Charge counter: $currentChargeCounter mAh"
+                val currentNow =
+                    batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW) / 1000
+                result += "\nCurrent Now: $currentNow mA"
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    val chargeTimeRemaining = batteryManager.computeChargeTimeRemaining()
+                    val chargeTimeRemainingDuration = chargeTimeRemaining.milliseconds
+                    result += "\nCharge Time remaining: $chargeTimeRemainingDuration"
                 }
             }
             return result

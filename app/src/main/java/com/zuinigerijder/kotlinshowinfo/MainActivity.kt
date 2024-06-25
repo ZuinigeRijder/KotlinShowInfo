@@ -1,13 +1,11 @@
 package com.zuinigerijder.kotlinshowinfo
 
-import android.content.ContentResolver
-import android.os.BatteryManager
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -15,6 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.zuinigerijder.kotlinshowinfo.ui.theme.KotlinShowInfoTheme
@@ -26,14 +25,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             KotlinShowInfoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    KotlinShowInfo(
-                        windowManager,
-                        getSystemService(BATTERY_SERVICE) as BatteryManager,
-                        contentResolver,
-                        modifier = Modifier.padding(innerPadding)
-                            .verticalScroll(rememberScrollState())
-                            .horizontalScroll(rememberScrollState())
-                    )
+                    KotlinShowInfo(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -41,19 +33,20 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun KotlinShowInfo(
-    windowManager: WindowManager?,
-    batteryManager: BatteryManager?,
-    contentResolver: ContentResolver?,
-    modifier: Modifier = Modifier) {
-    Text(
-        text = "" +
-                DateTimeUtil.getDateTimeInfo() + "\n" +
-                BatteryInfoUtil.getBatteryInfo(batteryManager) + "\n" +
-                DisplayInfoUtil.getDisplayInfo(windowManager) + "\n" +
-                DeviceInfoUtil.getDeviceInfo(contentResolver),
-        modifier = modifier
-    )
+fun KotlinShowInfo(modifier: Modifier = Modifier) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        OpenUrlButton(modifier)
+        Text(
+            text = "" +
+                    DateTimeUtil.getDateTimeInfo() + "\n" +
+                    BatteryInfoUtil.getBatteryInfo() + "\n" +
+                    DisplayInfoUtil.getDisplayInfo() + "\n" +
+                    DeviceInfoUtil.getDeviceInfo(),
+            modifier = modifier
+                .verticalScroll(rememberScrollState())
+                .horizontalScroll(rememberScrollState())
+        )
+    }
 }
 
 
@@ -62,6 +55,6 @@ fun KotlinShowInfo(
 @Composable
 fun KotlinShowInfoPreview() {
     KotlinShowInfoTheme {
-        KotlinShowInfo(null, null, null)
+        KotlinShowInfo()
     }
 }
