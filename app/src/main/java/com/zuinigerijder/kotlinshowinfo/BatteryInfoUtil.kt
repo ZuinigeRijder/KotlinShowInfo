@@ -1,10 +1,10 @@
 package com.zuinigerijder.kotlinshowinfo
 
+import android.content.Context.BATTERY_SERVICE
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
 import android.os.Build
-import androidx.activity.ComponentActivity.BATTERY_SERVICE
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import kotlin.time.Duration.Companion.milliseconds

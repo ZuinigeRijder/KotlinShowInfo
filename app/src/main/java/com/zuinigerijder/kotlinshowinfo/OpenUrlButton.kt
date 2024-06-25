@@ -14,7 +14,7 @@ fun OpenUrlButton(modifier: Modifier = Modifier) {
     Button(
         modifier = modifier,
         onClick = {
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ZuinigeRijder/hyundai_kia_connect_monitor"))
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ZuinigeRijder/KotlinShowInfo"))
             context.startActivity(browserIntent)
         }
     ) {
